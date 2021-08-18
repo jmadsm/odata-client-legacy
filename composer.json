@@ -1,0 +1,20 @@
+{
+    "name": "jmadsm/odata-client-legacy",
+    "version": "1.0.0",
+    "description": "Legacy OData client using guzzle",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Jma",
+            "email": "rrk@jma.dk"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "JmaDsm\\ODataLegacy\\": "src"
+        }
+    }
+}
