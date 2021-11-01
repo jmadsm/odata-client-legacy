@@ -36,7 +36,7 @@ class ODataLegacyServiceProvider extends \Illuminate\Support\ServiceProvider
     }
 
     /**
-     * Get the services provided by the provider.
+     * Get the services provided by the provider
      *
      * @return array
      */
@@ -53,12 +53,6 @@ class ODataLegacyServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public static function getTenantToken(\Illuminate\Http\Request $request)
     {
-        return  $request->header(
-            'x-tenant-token',
-            $request->input(
-                'tenant_token',
-                $request->input('tenant-token')
-            )
-        );
+        return $request->header('x-tenant-token', $request->header('x-tenant-domain', $request->input('tenant_token', $request->input('tenant-token'))));
     }
 }
