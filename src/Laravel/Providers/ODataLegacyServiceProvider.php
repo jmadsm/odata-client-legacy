@@ -25,7 +25,7 @@ class ODataLegacyServiceProvider extends \Illuminate\Support\ServiceProvider
             if ($tenantToken) {
                 $tenant = (\Illuminate\Support\Facades\App::make(TenantServiceClient::class))->get($tenantToken);
             } elseif ($tenantDomain) {
-                $tenant = (\Illuminate\Support\Facades\App::make(TenantServiceClient::class))->getByDomain('domain', $tenantDomain);
+                $tenant = (\Illuminate\Support\Facades\App::make(TenantServiceClient::class))->getByDomain($tenantDomain);
             } else {
                 if (config('odata-legacy.exeption_without_tenant_token')) {
                     throw new \Exception('no_tenant_token', 1);
