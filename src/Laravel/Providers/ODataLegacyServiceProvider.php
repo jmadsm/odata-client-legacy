@@ -18,18 +18,21 @@ class ODataLegacyServiceProvider extends \Illuminate\Support\ServiceProvider
             __DIR__ . '/../config/odata-legacy.php' => config_path('odata-legacy.php')
         ], 'odata-legacy-config');
 
-        $tenantToken = self::getTenantToken($request);
+        $tenantToken  = self::getTenantToken($request);
+        $tenantDomain = $request->header('x-tenant-domain');
 
-        $this->app->singleton(ODataClient::class, function () use ($tenantToken) {
-            if (is_null($tenantToken)) {
+        $this->app->singleton(ODataClient::class, function () use ($tenantToken, $tenantDomain) {
+            if ($tenantToken) {
+                $tenant = (\Illuminate\Support\Facades\App::make(TenantServiceClient::class))->get($tenantToken);
+            } elseif ($tenantDomain) {
+                $tenant = $this->getTenantFromDomain($tenantDomain);
+            } else {
                 if (config('odata-legacy.exeption_without_tenant_token')) {
                     throw new \Exception('no_tenant_token', 1);
                 }
 
                 return null;
             }
-
-            $tenant = (\Illuminate\Support\Facades\App::make(TenantServiceClient::class))->get($tenantToken);
 
             return ODataClient::factory($tenant, config('odata-legacy.verify_ssl'));
         });
@@ -53,9 +56,22 @@ class ODataLegacyServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public static function getTenantToken(\Illuminate\Http\Request $request)
     {
-        return  $request->header('x-tenant-token',
-                $request->header('x-tenant-domain',
-                $request->input('tenant_token',
-                $request->input('tenant-token'))));
+        return  $request->header(
+            'x-tenant-token',
+            $request->input(
+                'tenant_token',
+                $request->input('tenant-token')
+            )
+        );
+    }
+
+    protected function getTenantFromDomain(string $domain)
+    {
+        $tenants = (\Illuminate\Support\Facades\App::make(TenantServiceClient::class))->search('domain', $domain);
+        if (count($tenants) > 1) {
+            throw new \Exception('More than 1 tenant resolved by tenant domain: ' . var_dump($domain), 1);
+        }
+
+        return $tenants[0];
     }
 }
