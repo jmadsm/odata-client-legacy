@@ -16,7 +16,7 @@ class ODataLegacyServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../config/odata-legacy.php' => config_path('odata-legacy.php')
-        ], 'odata-config');
+        ], 'odata-legacy-config');
 
         $tenantToken = self::getTenantToken($request);
 
