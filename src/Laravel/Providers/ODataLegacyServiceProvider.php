@@ -56,6 +56,10 @@ class ODataLegacyServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public static function getTenantToken(\Illuminate\Http\Request $request)
     {
+        if (config('odata-legacy.resolve_tenant_from_origin') === true) {
+            return $request->headers->get('origin');
+        }
+
         return  $request->header(
             'x-tenant-token',
             $request->input(
