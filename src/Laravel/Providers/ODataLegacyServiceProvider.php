@@ -19,13 +19,12 @@ class ODataLegacyServiceProvider extends \Illuminate\Support\ServiceProvider
         ], 'odata-legacy-config');
 
         $tenantToken  = self::getTenantToken($request);
-        $tenantDomain = (config('odata-legacy.resolve_tenant_from_origin') === true) ? $request->headers->get('origin') : null;
 
-        $this->app->singleton(ODataClient::class, function () use ($tenantToken, $tenantDomain) {
+        $this->app->singleton(ODataClient::class, function () use ($tenantToken, $request) {
             if ($tenantToken) {
                 $tenant = (\Illuminate\Support\Facades\App::make(TenantServiceClient::class))->get($tenantToken);
-            } elseif ($tenantDomain) {
-                $tenant = (\Illuminate\Support\Facades\App::make(TenantServiceClient::class))->getByDomain($tenantDomain);
+            } elseif (config('odata-legacy.resolve_tenant_from_origin') === true) {
+                $tenant = (\Illuminate\Support\Facades\App::make(TenantServiceClient::class))->getByDomain($request->headers->get('origin'));
             } else {
                 if (config('odata-legacy.exeption_without_tenant_token')) {
                     throw new \Exception('no_tenant_token', 1);
