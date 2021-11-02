@@ -19,7 +19,7 @@ class ODataLegacyServiceProvider extends \Illuminate\Support\ServiceProvider
         ], 'odata-legacy-config');
 
         $tenantToken  = self::getTenantToken($request);
-        $tenantDomain = $request->header('x-tenant-domain');
+        $tenantDomain = (config('odata-legacy.resolve_tenant_from_origin') === true) ? $request->headers->get('origin') : null;
 
         $this->app->singleton(ODataClient::class, function () use ($tenantToken, $tenantDomain) {
             if ($tenantToken) {
@@ -56,10 +56,6 @@ class ODataLegacyServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public static function getTenantToken(\Illuminate\Http\Request $request)
     {
-        if (config('odata-legacy.resolve_tenant_from_origin') === true) {
-            return $request->headers->get('origin');
-        }
-
         return  $request->header(
             'x-tenant-token',
             $request->input(
