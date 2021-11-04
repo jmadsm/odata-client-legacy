@@ -10,7 +10,7 @@ use Psr\Http\Message\RequestInterface;
 
 class ODataClient extends Client
 {
-    protected $tenant;
+    public $tenant;
     protected $odata = true;
 
     public function __construct(array $config, $tenant)
