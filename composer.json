@@ -1,6 +1,6 @@
 {
     "name": "jmadsm/odata-client-legacy",
-    "version": "1.2.6",
+    "version": "1.2.7",
     "description": "Legacy OData client using guzzle",
     "type": "library",
     "authors": [
@@ -12,7 +12,7 @@
     "require": {
         "guzzlehttp/guzzle": "^7.0",
         "illuminate/support": "^5.8 || ^6.0 || ^7.0 || ^8.0",
-        "jmadsm/tenant-service-client": "^1.4"
+        "jmadsm/tenant-service-client": "^1.4.1"
     },
     "autoload": {
         "psr-4": {
