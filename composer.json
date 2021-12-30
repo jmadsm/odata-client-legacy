@@ -1,6 +1,6 @@
 {
     "name": "jmadsm/odata-client-legacy",
-    "version": "1.2.8",
+    "version": "1.2.9",
     "description": "Legacy OData client using guzzle",
     "type": "library",
     "authors": [
